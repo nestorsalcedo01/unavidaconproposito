@@ -1,581 +1,425 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía Devocional Familiar: Un Nuevo Comienzo</title>
+    <title>Devocional Familiar: Propósito y Sabiduría</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Deep Teal and Soft Grays (Background: bg-slate-100. Main Text: text-slate-700. Sidebar/Accent: bg-teal-700 text-white. Headings: text-teal-600. Cards: bg-white. Borders: border-slate-300. Highlight/Active: bg-teal-600 text-white or text-teal-500 for links) -->
-    <!-- Application Structure Plan: Single-page application (SPA) featuring a fixed left sidebar navigation on desktop, collapsing to a hamburger menu on mobile. The main content area dynamically displays sections.
-        - 'Inicio': Welcoming message and visually engaging "quick jump" cards to other main sections.
-        - 'Propósitos Divinos': A dedicated section where each of the 5 purposes is presented as an interactive card. Clicking a card reveals detailed content for that purpose within the same section, perhaps using a smooth expand/reveal animation or replacing content in a designated sub-area. This avoids traditional tabs for a more integrated feel.
-        - 'Sabiduría Bíblica': Similar structure to 'Propósitos', with each book (Proverbios, Salmos, etc.) as an interactive card leading to its content.
-        - 'Devocional en Práctica': Presents strategies and thematic ideas using a grid of styled cards that can expand or lead to detailed views.
-        - 'Reflexión Final': The concluding thoughts.
-        This structure aims for a modern, app-like feel, enhancing user engagement through clear visual hierarchy and interactive elements, distinct from previous tab-based or simple vertical layouts.
-    -->
-    <!-- Visualization & Content Choices:
-        - Overall: Focus on clarity, modern aesthetics, and intuitive interaction. All content from the source report will be integrated into this new structure.
-        - Navigation: Sidebar (desktop) / Hamburger (mobile). Visual cards on 'Inicio' for quick navigation.
-        - Content Presentation: Key information (5 Purposes, Wisdom Books, Devotional Ideas) presented as interactive cards. Detailed text shown dynamically upon interaction.
-        - Text Styling: Emphasis on readability with 'Poppins' font, clear headings, and well-spaced paragraphs.
-        - Interactivity: Clickable cards, smooth transitions for content reveal, responsive design.
-        - Tables: Styled for consistency with the new theme.
-        - Accordions/Expandables: Used within detailed content views if necessary, styled to match the theme.
-        - CONFIRMATION: NO SVG graphics used (using Unicode or Tailwind classes for icons). NO Mermaid JS used. No charts, as content is textual.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f1f5f9; /* slate-100 */
-            color: #334155; /* slate-700 */
+            font-family: 'Inter', sans-serif;
         }
-        .main-container {
-            @apply flex flex-col md:flex-row min-h-screen;
+        /* Estilos para el efecto de acordeón (opcional, si se implementa con JS) */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
         }
-        /* Sidebar */
-        .sidebar {
-            @apply bg-teal-700 text-white w-full md:w-64 space-y-4 p-4 fixed md:sticky top-0 h-screen transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out z-30 shadow-lg;
+        .accordion-button.active + .accordion-content {
+            max-height: 1000px; /* Ajustar según el contenido */
         }
-        .sidebar.open {
-            @apply transform translate-x-0;
+        .section-title {
+            border-bottom: 2px solid #3b82f6; /* Tailwind blue-500 */
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
         }
-        .sidebar-header {
-            @apply text-2xl font-bold p-4 text-center border-b border-teal-600;
+        .sub-section-title {
+            border-left: 4px solid #60a5fa; /* Tailwind blue-400 */
+            padding-left: 1rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
         }
-        .sidebar-link {
-            @apply flex items-center space-x-3 px-4 py-3 rounded-md hover:bg-teal-600 transition-colors duration-200 cursor-pointer;
+        .card {
+            background-color: white;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 1.5rem; /* mb-6 */
         }
-        .sidebar-link.active {
-            @apply bg-teal-800 font-semibold shadow-inner;
+        .proverb-card {
+            background-color: #eff6ff; /* blue-50 */
         }
-        .sidebar-icon { @apply text-xl; }
-
-        /* Main Content Area */
-        .main-content {
-            @apply flex-1 p-6 sm:p-8 md:p-10 overflow-y-auto;
+        .psalm-card {
+            background-color: #f0fdf4; /* green-50 */
         }
-        .page-section {
-            @apply bg-white rounded-xl shadow-lg p-6 sm:p-8 mb-10;
+        .ecclesiastes-card {
+            background-color: #fefce8; /* yellow-50 */
         }
-        .section-title-main {
-            @apply text-3xl sm:text-4xl font-bold text-teal-600 mb-8 text-center;
+        .santiago-card {
+            background-color: #fdf2f8; /* pink-50 */
         }
-        .section-intro {
-            @apply text-lg text-slate-600 mb-8 text-center max-w-3xl mx-auto;
+        nav a {
+            transition: color 0.3s ease, transform 0.3s ease;
         }
-        .subsection-title-main {
-            @apply text-2xl font-semibold text-teal-500 mb-6 mt-8;
+        nav a:hover {
+            color: #2563eb; /* Tailwind blue-600 */
+            transform: translateY(-2px);
         }
-        .prose-enhanced p, .prose-enhanced li { @apply text-slate-600 leading-relaxed text-base; }
-        .prose-enhanced ul { @apply list-disc list-inside pl-4 mb-5 space-y-1.5; }
-        .prose-enhanced blockquote { @apply border-l-4 border-teal-500 pl-5 py-3 my-6 bg-teal-50 text-slate-600 italic rounded-r-md text-sm shadow-sm; }
-
-        /* Interactive Cards */
-        .interactive-card-grid {
-            @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8;
+        .table-responsive {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
-        .interactive-card {
-            @apply bg-gradient-to-br from-teal-500 to-teal-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col items-center text-center;
+        table {
+            width: 100%;
         }
-        .interactive-card-icon { @apply text-5xl mb-4; }
-        .interactive-card-title { @apply text-xl font-semibold mb-2; }
-        .interactive-card-desc { @apply text-sm text-teal-100; }
-        
-        .content-card {
-             @apply bg-white p-6 rounded-lg shadow-lg mb-6 transition-all duration-300;
-        }
-        .content-card-title {
-            @apply text-xl font-semibold text-teal-600 mb-3;
-        }
-
-        /* Accordion for thematic ideas */
-        .theme-accordion-button {
-            @apply w-full text-left px-6 py-4 bg-sky-600 text-white font-semibold rounded-t-lg hover:bg-sky-700 transition-colors duration-200 flex justify-between items-center shadow-md;
-        }
-        .theme-accordion-content {
-            @apply bg-sky-50 p-5 rounded-b-lg shadow-inner prose-enhanced;
-        }
-        .theme-accordion-icon { @apply transform transition-transform duration-300; }
-
-        /* Hamburger button */
-        .hamburger-button {
-            @apply md:hidden fixed top-4 right-4 z-40 p-2 bg-teal-700 text-white rounded-md shadow-lg;
-        }
-
-        /* Table styling */
-        .custom-table { @apply min-w-full divide-y divide-slate-200 bg-white rounded-lg shadow-md overflow-hidden; }
-        .custom-table th { @apply px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider bg-slate-100; }
-        .custom-table td { @apply px-6 py-4 whitespace-normal text-sm text-slate-700; }
-        .custom-table tbody tr:nth-child(even) { @apply bg-slate-50; }
-
-        /* Detail view for purposes/wisdom books */
-        .detail-view-title { @apply text-2xl sm:text-3xl font-bold text-teal-600 mb-6; }
-        .detail-view-content { @apply prose-enhanced;}
-        .back-button {
-            @apply mb-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500;
-        }
-
     </style>
 </head>
-<body>
-    <div class="main-container">
-        <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                Guía Devocional
+<body class="bg-gradient-to-br from-slate-100 to-sky-100 text-gray-800 leading-relaxed">
+
+    <!-- Header y Navegación -->
+    <header class="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex-shrink-0">
+                    <a href="#" class="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors">Vida con Propósito</a>
+                </div>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="#introduccion" class="text-gray-600 hover:text-blue-600 font-medium">Introducción</a>
+                    <a href="#proposito" class="text-gray-600 hover:text-blue-600 font-medium">Propósito</a>
+                    <a href="#sabiduria" class="text-gray-600 hover:text-blue-600 font-medium">Sabiduría</a>
+                    <a href="#devocional" class="text-gray-600 hover:text-blue-600 font-medium">Devocional</a>
+                    <a href="#conclusion" class="text-gray-600 hover:text-blue-600 font-medium">Conclusión</a>
+                </nav>
+                <!-- Botón de menú para móviles -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-600 hover:text-blue-600 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
             </div>
-            <nav class="flex-grow">
-                <a class="sidebar-link active" data-section="inicio">
-                    <span class="sidebar-icon">🏠</span> Inicio
-                </a>
-                <a class="sidebar-link" data-section="propositos">
-                    <span class="sidebar-icon">🎯</span> Propósitos Divinos
-                </a>
-                <a class="sidebar-link" data-section="sabiduria">
-                    <span class="sidebar-icon">📚</span> Sabiduría Bíblica
-                </a>
-                <a class="sidebar-link" data-section="accion">
-                    <span class="sidebar-icon">🛠️</span> Devocional en Práctica
-                </a>
-                <a class="sidebar-link" data-section="conclusion">
-                    <span class="sidebar-icon">🌟</span> Reflexión Final
-                </a>
-            </nav>
-            <div class="p-4 mt-auto border-t border-teal-600">
-                <p class="text-xs text-teal-200 text-center">&copy; <span id="currentYear"></span> Familia Unida en Fe</p>
+        </div>
+        <!-- Menú desplegable para móviles -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg py-2">
+            <a href="#introduccion" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">Introducción</a>
+            <a href="#proposito" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">Propósito</a>
+            <a href="#sabiduria" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">Sabiduría</a>
+            <a href="#devocional" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">Devocional</a>
+            <a href="#conclusion" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">Conclusión</a>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <!-- Sección Introducción -->
+        <section id="introduccion" class="pt-20 -mt-20 min-h-screen flex flex-col justify-center">
+            <div class="card bg-opacity-90 backdrop-blur-sm">
+                <h1 class="section-title text-blue-600">Una Vida con Propósito en Familia</h1>
+                <p class="text-xl text-gray-600 mb-6 italic">Guía Devocional para un Mundo Desafiante</p>
+                
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h2 class="text-3xl font-semibold text-gray-700 mb-4">Encontrando Nuestro Norte en un Mundo Agitado</h2>
+                        <p class="mb-4">El mundo contemporáneo se presenta con una dinámica acelerada y, en muchos aspectos, convulsionada. Las familias, y en particular los jóvenes, se ven expuestos a una multiplicidad de presiones, a un flujo incesante de información que a menudo carece de profundidad, a un ambiente de relativismo moral y a una persistente sensación de incertidumbre.</p>
+                        <p class="mb-4">Estos factores impactan directamente la cohesión familiar y el desarrollo integral de las nuevas generaciones. Ya en su tiempo, el comentarista Matthew Henry, adaptado por Francisco Lacueva, identificaba tendencias que hoy resuenan con fuerza: una fe que puede volverse superficial, el temor ante el escepticismo, la constante seducción de los valores mundanos, la pereza en la profundización doctrinal y la desobediencia a los principios divinos. Estos son desafíos que un acompañamiento espiritual familiar debe considerar y abordar.</p>
+                         <p class="mb-4">Ante esta inestabilidad, la familia necesita un fundamento sólido, un ancla espiritual que le permita navegar las aguas turbulentas. Descubrir y vivir conforme a los propósitos que Dios ha diseñado para cada ser humano ofrece precisamente esa estabilidad, proveyendo dirección, significado y esperanza.</p>
+                    </div>
+                    <div class="rounded-xl overflow-hidden shadow-xl">
+                        <img src="https://placehold.co/600x400/3b82f6/ffffff?text=Familia+Unida" alt="Imagen de familia unida" class="w-full h-auto object-cover" onerror="this.src='https://placehold.co/600x400/cccccc/333333?text=Error+al+cargar+imagen'">
+                    </div>
+                </div>
+                 <p class="mt-6 text-sm text-gray-500">Este reporte tiene como objetivo ofrecer una guía para integrar las valiosas enseñanzas del libro "Una Vida con Propósito" con la sabiduría perenne contenida en los libros bíblicos de Proverbios, Salmos, Eclesiastés y Santiago.</p>
             </div>
-        </aside>
+        </section>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Hamburger Button -->
-            <button class="hamburger-button" id="hamburgerButton">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-            </button>
+        <!-- Sección Propósito -->
+        <section id="proposito" class="pt-24 -mt-20">
+            <h2 class="section-title text-blue-600">Parte 1: Redescubriendo el Propósito de Dios para Nuestras Vidas</h2>
+            <p class="text-lg mb-8 text-gray-600">Inspirado en "Una Vida con Propósito" de Rick Warren.</p>
 
-            <!-- Inicio Section -->
-            <section id="inicio-content" class="page-section">
-                <h1 class="section-title-main">Bienvenido a Tu Guía Devocional Familiar</h1>
-                <p class="section-intro">Un espacio interactivo para explorar juntos el propósito divino y la sabiduría bíblica, fortaleciendo la fe y los lazos familiares en el día a día.</p>
+            <div class="card">
+                <h3 class="sub-section-title text-blue-500">¿Para Qué Estamos Aquí? Los 5 Pilares del Plan Divino</h3>
+                <p class="mb-6">Este itinerario devocional se fundamenta en la premisa central de Rick Warren: "Todo comienza con Dios". No somos producto del azar ni un accidente cósmico; hemos sido creados por Dios y para Sus propósitos. Comprender estos designios divinos es esencial para navegar con sabiduría y esperanza el "mundo convulsionado" que nos rodea. Warren identifica cinco propósitos fundamentales que Dios tiene para nuestras vidas:</p>
                 
-                <div class="interactive-card-grid mt-10">
-                    <div class="interactive-card" data-target-section="propositos">
-                        <span class="interactive-card-icon">🎯</span>
-                        <h3 class="interactive-card-title">Los 5 Propósitos Divinos</h3>
-                        <p class="interactive-card-desc">Descubre el plan de Dios para tu vida y cómo vivirlo en familia.</p>
-                    </div>
-                    <div class="interactive-card" data-target-section="sabiduria">
-                        <span class="interactive-card-icon">📚</span>
-                        <h3 class="interactive-card-title">Sabiduría Bíblica Esencial</h3>
-                        <p class="interactive-card-desc">Explora Proverbios, Salmos, Eclesiastés y Santiago para el día a día.</p>
-                    </div>
-                    <div class="interactive-card" data-target-section="accion">
-                        <span class="interactive-card-icon">🛠️</span>
-                        <h3 class="interactive-card-title">Devocional en Práctica</h3>
-                        <p class="interactive-card-desc">Ideas y estrategias para un tiempo devocional familiar vibrante.</p>
-                    </div>
+                <div class="space-y-6">
+                    <!-- Pilar 1 -->
+                    <details class="bg-sky-50 p-4 rounded-lg shadow hover:shadow-md transition-shadow">
+                        <summary class="font-semibold text-xl text-sky-700 cursor-pointer">1. Fuiste Planeado para Agradar a Dios (Adoración)</summary>
+                        <div class="mt-3 text-gray-700 space-y-2">
+                            <p>El primer y más fundamental propósito de nuestra existencia es vivir para el placer de Dios. La adoración, en este sentido, trasciende los actos litúrgicos; es un estilo de vida integral que busca deleitar el corazón del Creador.</p>
+                            <p>Esto se manifiesta al amarlo supremamente, confiar en Él completamente, obedecerle de todo corazón, alabarlo y darle gracias continuamente, y usar nuestras habilidades y talentos para Su gloria. La entrega total y rendida a Dios es la esencia de la verdadera adoración.</p>
+                            <p class="italic text-sm">Enfoque familiar y juvenil: Explorar cómo la adoración se extiende más allá de la música en la iglesia. ¿Cómo pueden los talentos únicos de cada miembro de la familia convertirse en una ofrenda de adoración a Dios? Dialogar sobre la obediencia como acto de amor.</p>
+                        </div>
+                    </details>
+                    <!-- Pilar 2 -->
+                     <details class="bg-sky-50 p-4 rounded-lg shadow hover:shadow-md transition-shadow">
+                        <summary class="font-semibold text-xl text-sky-700 cursor-pointer">2. Fuiste Formado para la Familia de Dios (Comunión)</summary>
+                        <div class="mt-3 text-gray-700 space-y-2">
+                            <p>Dios, en Su naturaleza trinitaria, es un ser relacional, y Su deseo es tener una familia. Al depositar nuestra fe en Cristo, somos adoptados como hijos de Dios, y la Iglesia se convierte en nuestra familia espiritual. La vida, según el diseño divino, está destinada a ser compartida.</p>
+                            <p class="italic text-sm">Enfoque familiar: ¿Cómo podemos ser una "familia de Dios" más fuerte y unida dentro de nuestro propio hogar? ¿De qué maneras concretas apoyamos y participamos en nuestra iglesia local? Practicar los mandatos de "unos a otros" en casa.</p>
+                        </div>
+                    </details>
+                    <!-- Pilar 3 -->
+                    <details class="bg-sky-50 p-4 rounded-lg shadow hover:shadow-md transition-shadow">
+                        <summary class="font-semibold text-xl text-sky-700 cursor-pointer">3. Fuiste Creado para Ser Como Cristo (Discipulado)</summary>
+                        <div class="mt-3 text-gray-700 space-y-2">
+                           <p>El plan soberano de Dios para cada creyente es conformarlo a la imagen de Su Hijo, Jesucristo. Este es nuestro destino y el tercer gran propósito de nuestra vida. Dios está más interesado en el desarrollo de nuestro carácter que en nuestra comodidad terrenal.</p>
+                           <p class="italic text-sm">Enfoque juvenil y familiar: ¿Qué significa "ser como Cristo" en los escenarios cotidianos? Identificar un área del carácter de Cristo para trabajarla juntos como familia. Ver las dificultades como oportunidades para crecer.</p>
+                        </div>
+                    </details>
+                    <!-- Pilar 4 -->
+                    <details class="bg-sky-50 p-4 rounded-lg shadow hover:shadow-md transition-shadow">
+                        <summary class="font-semibold text-xl text-sky-700 cursor-pointer">4. Fuiste Moldeado para Servir a Dios (Ministerio)</summary>
+                        <div class="mt-3 text-gray-700 space-y-2">
+                           <p>Hemos sido puestos en esta tierra no solo para recibir, sino para hacer una contribución significativa. Servimos a Dios al servir a otros. Dios nos ha moldeado de manera única (MOLDE/FORMA) para un ministerio particular.</p>
+                           <p class="italic text-sm">Enfoque familiar: Ayudar a cada miembro a identificar sus dones y pasiones. ¿Qué te entusiasma? ¿En qué eres bueno? Encontrar maneras de usar esos dones para servir.</p>
+                        </div>
+                    </details>
+                    <!-- Pilar 5 -->
+                    <details class="bg-sky-50 p-4 rounded-lg shadow hover:shadow-md transition-shadow">
+                        <summary class="font-semibold text-xl text-sky-700 cursor-pointer">5. Fuiste Hecho para una Misión (Misión)</summary>
+                        <div class="mt-3 text-gray-700 space-y-2">
+                            <p>El quinto propósito de Dios es que nos unamos a Él en Su obra redentora en el mundo. Esta misión es compartida (llevar a las personas a Dios) y específica (relacionada con contexto y dones). Tu testimonio personal es eficaz.</p>
+                            <p class="italic text-sm">Enfoque familiar: ¿Cómo compartir nuestra fe de manera natural y auténtica? Discutir la importancia del testimonio personal. Apoyar a misioneros.</p>
+                        </div>
+                    </details>
                 </div>
+            </div>
 
-                <div class="prose-enhanced mt-12">
-                    <h2 class="subsection-title-main text-center">Encontrando Nuestro Norte en un Mundo Agitado</h2>
-                    <p>El mundo contemporáneo se presenta con una dinámica acelerada y, en muchos aspectos, convulsionada. Las familias, y en particular los jóvenes, se ven expuestos a una multiplicidad de presiones, a un flujo incesante de información que a menudo carece de profundidad, a un ambiente de relativismo moral y a una persistente sensación de incertidumbre. Estos factores impactan directamente la cohesión familiar y el desarrollo integral de las nuevas generaciones.</p>
-                    <p>Ante esta inestabilidad, la familia necesita un fundamento sólido. Descubrir y vivir conforme a los propósitos que Dios ha diseñado para cada ser humano ofrece precisamente esa estabilidad, proveyendo dirección, significado y esperanza. Como afirma Rick Warren, "Todo comienza con Dios" y "No eres un accidente"; el propósito emana del Creador.</p>
-                    <p>Este recurso busca integrar las enseñanzas de "Una Vida con Propósito" con la sabiduría perenne de Proverbios, Salmos, Eclesiastés y Santiago, para construir un devocional familiar que sea centrado en Cristo, bíblicamente sólido, relevante, práctico y transformador.</p>
+            <div class="card mt-8">
+                <h3 class="sub-section-title text-blue-500">Viviendo con la Eternidad en Mente, Cada Día</h3>
+                <p class="mb-4">Una de las enseñanzas más transformadoras de "Una Vida con Propósito" es la perspectiva de que nuestra existencia terrenal es una preparación para la eternidad. Esta comprensión debería alterar radicalmente nuestros valores y prioridades.</p>
+                <p class="mb-4">La noción resuena con Eclesiastés: "VANIDAD DE VANIDADES, TODO ES VANIDAD... Teme a Dios, y guarda sus mandamientos; porque esto es el todo del hombre". La perspectiva eterna otorga significado y urgencia a la obediencia a Dios.</p>
+                <blockquote class="border-l-4 border-blue-400 pl-4 italic text-gray-600 my-4">
+                    "Una vez que comprendes que la vida es más que vivir el aquí y ahora, que es una preparación para la eternidad, entonces comienzas a vivir de manera diferente." - Rick Warren
+                </blockquote>
+                <p class="italic text-sm">Enfoque familiar y juvenil: Dialogar sobre cómo las decisiones de hoy impactan la eternidad. ¿Cómo vivir enfocados en lo eterno en un mundo de gratificación inmediata?</p>
+            </div>
+        </section>
+
+        <!-- Sección Sabiduría -->
+        <section id="sabiduria" class="pt-24 -mt-20">
+            <h2 class="section-title text-green-600">Parte 2: Equipándonos con Sabiduría Bíblica para el Camino</h2>
+            <p class="text-lg mb-8 text-gray-600">Nutriéndonos de Proverbios, Salmos, Eclesiastés y Santiago.</p>
+
+            <div class="card">
+                <h3 class="sub-section-title text-green-500">Tabla de Conexión: Propósitos de Warren y Libros Bíblicos Clave</h3>
+                <div class="table-responsive my-6 shadow-md rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-green-100">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-green-700 uppercase tracking-wider">Propósito de Warren</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-green-700 uppercase tracking-wider">Libro Bíblico Primario</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-green-700 uppercase tracking-wider">Temas Clave de Conexión</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Adoración</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Salmos</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Alabanza, gratitud, oración, expresión de emociones ante Dios, reconocimiento de la majestad y misericordia divinas.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Comunión</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Santiago / Salmos</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Amor fraternal, unidad en la fe, perdón mutuo, servicio práctico, hospitalidad, edificación espiritual.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Discipulado</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Proverbios / Santiago</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Sabiduría práctica, temor de Dios, desarrollo del carácter, obediencia, perseverancia, santidad.</td>
+                            </tr>
+                             <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Ministerio</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Proverbios / Santiago</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Uso de dones, diligencia, ayuda al prójimo, mayordomía, buenas obras.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Misión</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Salmos / Escrituras</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Proclamación, testimonio, preocupación por los no creyentes, oración por el Reino.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Perspectiva Eterna</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Eclesiastés</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Vanidad terrenal, significado trascendente, temor de Dios, juicio final.</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </section>
-
-            <!-- Propósitos Section -->
-            <section id="propositos-content" class="page-section hidden">
-                <h1 class="section-title-main">🎯 Los 5 Propósitos Divinos</h1>
-                <p class="section-intro" id="propositos-intro">Explora los propósitos fundamentales que Dios tiene para tu vida, inspirados en "Una Vida con Propósito" de Rick Warren. Haz clic en cada propósito para descubrir más.</p>
-                
-                <div class="interactive-card-grid" id="propositos-card-container">
-                    <div class="interactive-card" data-detail="proposito-adoracion">
-                        <span class="interactive-card-icon">💖</span><h3 class="interactive-card-title">Adoración</h3>
-                        <p class="interactive-card-desc">Fuiste planeado para agradar a Dios.</p>
-                    </div>
-                    <div class="interactive-card" data-detail="proposito-comunion">
-                        <span class="interactive-card-icon">👨‍👩‍👧‍👦</span><h3 class="interactive-card-title">Comunión</h3>
-                        <p class="interactive-card-desc">Fuiste formado para la familia de Dios.</p>
-                    </div>
-                    <div class="interactive-card" data-detail="proposito-discipulado">
-                        <span class="interactive-card-icon">🌱</span><h3 class="interactive-card-title">Discipulado</h3>
-                        <p class="interactive-card-desc">Fuiste creado para ser como Cristo.</p>
-                    </div>
-                    <div class="interactive-card" data-detail="proposito-ministerio">
-                        <span class="interactive-card-icon">🛠️</span><h3 class="interactive-card-title">Ministerio</h3>
-                        <p class="interactive-card-desc">Fuiste moldeado para servir a Dios.</p>
-                    </div>
-                    <div class="interactive-card" data-detail="proposito-mision">
-                        <span class="interactive-card-icon">🌍</span><h3 class="interactive-card-title">Misión</h3>
-                        <p class="interactive-card-desc">Fuiste hecho para una misión.</p>
-                    </div>
-                </div>
-
-                <div id="propositos-detail-view" class="mt-10 hidden">
-                    <button class="back-button" id="back-to-propositos">← Volver a Propósitos</button>
-                    <div id="proposito-detail-content"></div>
-                </div>
-            </section>
-
-            <!-- Sabiduría Bíblica Section -->
-            <section id="sabiduria-content" class="page-section hidden">
-                <h1 class="section-title-main">📚 Sabiduría Bíblica Esencial</h1>
-                <p class="section-intro" id="sabiduria-intro">Sumérgete en la riqueza de Proverbios, Salmos, Eclesiastés y Santiago. Selecciona un libro para explorar sus enseñanzas y aplicaciones prácticas para la vida familiar.</p>
-
-                <div class="interactive-card-grid" id="sabiduria-card-container">
-                     <div class="interactive-card" data-detail="sabiduria-proverbios">
-                        <span class="interactive-card-icon">📖</span><h3 class="interactive-card-title">Proverbios</h3>
-                        <p class="interactive-card-desc">Sabiduría práctica para la vida diaria.</p>
-                    </div>
-                    <div class="interactive-card" data-detail="sabiduria-salmos">
-                        <span class="interactive-card-icon">🎶</span><h3 class="interactive-card-title">Salmos</h3>
-                        <p class="interactive-card-desc">Un corazón anclado en Dios.</p>
-                    </div>
-                    <div class="interactive-card" data-detail="sabiduria-eclesiastes">
-                        <span class="interactive-card-icon">🤔</span><h3 class="interactive-card-title">Eclesiastés</h3>
-                        <p class="interactive-card-desc">Significado más allá de la vanidad.</p>
-                    </div>
-                    <div class="interactive-card" data-detail="sabiduria-santiago">
-                        <span class="interactive-card-icon">🏃‍♂️</span><h3 class="interactive-card-title">Santiago</h3>
-                        <p class="interactive-card-desc">Una fe que transforma y actúa.</p>
-                    </div>
-                </div>
-                
-                 <div class="my-10 prose-enhanced">
-                    <h3 class="subsection-title-main text-center">Tabla de Conexión: Propósitos y Libros Bíblicos</h3>
-                    <div class="overflow-x-auto">
-                        <table class="custom-table mx-auto">
-                            <thead>
-                                <tr><th>Propósito de Warren</th><th>Libro Bíblico Primario</th><th>Temas Clave</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>Adoración</td><td>Salmos</td><td>Alabanza, gratitud, oración, majestad divina.</td></tr>
-                                <tr><td>Comunión</td><td>Santiago / Salmos</td><td>Amor fraternal, unidad, perdón, servicio.</td></tr>
-                                <tr><td>Discipulado</td><td>Proverbios / Santiago</td><td>Sabiduría práctica, temor de Dios, carácter.</td></tr>
-                                <tr><td>Ministerio</td><td>Proverbios / Santiago</td><td>Uso de dones, diligencia, mayordomía.</td></tr>
-                                <tr><td>Misión</td><td>Salmos / General</td><td>Proclamación, testimonio, oración por el Reino.</td></tr>
-                                <tr><td>Perspectiva Eterna</td><td>Eclesiastés</td><td>Vanidad terrenal, significado trascendente.</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-
-                <div id="sabiduria-detail-view" class="mt-10 hidden">
-                    <button class="back-button" id="back-to-sabiduria">← Volver a Sabiduría</button>
-                    <div id="sabiduria-detail-content"></div>
-                </div>
-            </section>
-
-            <!-- Devocional en Acción Section -->
-            <section id="accion-content" class="page-section hidden prose-enhanced">
-                <h1 class="section-title-main">🛠️ Devocional en Práctica</h1>
-                <p class="section-intro">El tiempo devocional familiar es un laboratorio dinámico donde los propósitos de Dios se aprenden, experimentan y viven. Es un espacio para adorar, fortalecer la comunión, discipularse, planificar el servicio y orar por la misión.</p>
-
-                <h2 class="subsection-title-main">Estrategias para un Devocional Familiar Vibrante</h2>
-                <ul>
-                    <li>💡 <strong>Consistencia sobre Duración:</strong> 15-20 minutos regulares son mejores que sesiones largas esporádicas.</li>
-                    <li>🙋‍♂️ <strong>Participación Activa:</strong> Involucrar a todos, usar preguntas, animar diarios devocionales.</li>
-                    <li>🎨 <strong>Variedad de Métodos:</strong> Usar videos, música, testimonios, arte, no solo lectura.</li>
-                    <li>🔗 <strong>Relevancia:</strong> Conectar verdades bíblicas con realidades juveniles. Usar lenguaje comprensible.</li>
-                    <li>🛡️ <strong>Ambiente de Gracia:</strong> Espacio seguro para preguntas, dudas y luchas sin temor al juicio.</li>
-                    <li>🔄 <strong>Enfoque en Transformación:</strong> Meta: cambio de corazón y conducta, no solo conocimiento.</li>
-                </ul>
-
-                <div class="my-10">
-                    <h3 class="subsection-title-main text-center">Ideas Prácticas para Devocionales Juveniles</h3>
-                     <div class="overflow-x-auto">
-                        <table class="custom-table mx-auto">
-                            <thead><tr><th>Desafío Común</th><th>Estrategia Moderna/Juvenil</th><th>Fundamento Bíblico</th></tr></thead>
-                            <tbody>
-                                <tr><td>Falta de interés</td><td>Videos cortos, música actual, testimonios.</td><td>Parábolas, Salmos.</td></tr>
-                                <tr><td>Distracciones (móviles)</td><td>"Caja de móviles", apps bíblicas guiadas.</td><td>Disciplina, enfoque.</td></tr>
-                                <tr><td>Irrelevancia percibida</td><td>Conectar con temas actuales (bullying, redes).</td><td>Santiago, Proverbios.</td></tr>
-                                <tr><td>Falta de participación</td><td>Preguntas abiertas, debates, que lideren.</td><td>Colosenses 3:16.</td></tr>
-                                <tr><td>Lenguaje bíblico difícil</td><td>Traducciones modernas (NVI), explicar.</td><td>1 Corintios 14:9.</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <p class="text-sm text-gray-500 italic">Esta tabla sirve como un mapa conceptual, mostrando las sinergias temáticas y ayudando a estructurar el estudio devocional.</p>
+            </div>
             
-                <h2 class="subsection-title-main">Ideas Temáticas para el Devocional Semanal</h2>
-                <div class="space-y-5" id="temas-accordion-container">
-                    <!-- Los temas se cargarán aquí desde JS -->
+            <div class="mt-8 grid md:grid-cols-2 gap-8">
+                <!-- Proverbios -->
+                <div class="card proverb-card">
+                    <h4 class="text-2xl font-semibold text-blue-700 mb-3">El Tesoro de la Sabiduría Práctica (Proverbios)</h4>
+                    <img src="https://placehold.co/600x300/818cf8/ffffff?text=Sabiduría+de+Proverbios" alt="Ilustración sobre Proverbios" class="rounded-lg mb-4 w-full" onerror="this.src='https://placehold.co/600x300/cccccc/333333?text=Error+Proverbios'">
+                    <p class="mb-2">Proverbios es un manual de sabiduría divina para la vida cotidiana, la toma de decisiones y el carácter. Nos provee el "cómo" práctico para el discipulado.</p>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700">
+                        <li><strong>Temor de Jehová como Fundamento:</strong> Reverencia y obediencia amorosa.</li>
+                        <li><strong>Consejos para la Toma de Decisiones:</strong> Confianza en Dios, Su Palabra como guía.</li>
+                        <li><strong>Relaciones Familiares:</strong> Respeto a los padres, guardar el corazón.</li>
+                        <li><strong>Integridad Personal:</strong> Caminar confiado, honestidad.</li>
+                    </ul>
+                    <p class="italic text-sm mt-3 text-blue-600">Enfoque Juvenil/Familiar: ¿Qué significa "temer a Jehová" hoy? Aplicar Proverbios 3:5-6. Diálogo sobre roles familiares e integridad.</p>
                 </div>
-            </section>
 
-            <!-- Conclusión Section -->
-            <section id="conclusion-content" class="page-section hidden prose-enhanced">
-                <h1 class="section-title-main">🌟 Reflexión Final: Forjando un Legado de Fe</h1>
-                <p class="section-intro">Vivir con propósito según los designios de Dios es un llamado fundamental. En un mundo convulsionado, esta intencionalidad es crucial. La familia es el primer espacio donde se aprenden y viven los propósitos de Dios, sentando bases sólidas para los hijos.</p>
-                <p>El camino de la fe tiene desafíos, pero la perseverancia se sostiene en promesas divinas: la Palabra no vuelve vacía, y Aquel que comenzó la buena obra es fiel para completarla. El legado más duradero es una fe viva, auténtica y con propósito, forjada con palabras y vida coherente.</p>
-                <p>Establecer un tiempo devocional familiar regular trasciende la mera práctica; es un acto de profunda significación espiritual. Es afirmar que Dios es el centro, Su Palabra la guía, y Sus propósitos el ancla. Esto nutre el alma e invierte en un futuro donde la fe sigue siendo relevante.</p>
-                <p>Al guiar a los hijos a explorar los propósitos divinos, se les equipa para descubrir su lugar único en el plan de Dios. El propósito familiar cultivado es terreno fértil para el propósito individual. Así, los jóvenes pueden ser agentes de transformación, con identidad clara en Cristo y dirección firme, listos para vivir vidas de significado eterno.</p>
-            </section>
-        </main>
-    </div>
+                <!-- Salmos -->
+                <div class="card psalm-card">
+                    <h4 class="text-2xl font-semibold text-green-700 mb-3">Un Corazón Anclado en Dios (Salmos)</h4>
+                     <img src="https://placehold.co/600x300/6ee7b7/ffffff?text=Paz+en+los+Salmos" alt="Ilustración sobre Salmos" class="rounded-lg mb-4 w-full" onerror="this.src='https://placehold.co/600x300/cccccc/333333?text=Error+Salmos'">
+                    <p class="mb-2">Los Salmos ofrecen un modelo para expresar emociones y experiencias humanas, dirigiéndolas a Dios. Fortalecen nuestra relación con Él.</p>
+                     <ul class="list-disc list-inside space-y-1 text-gray-700">
+                        <li><strong>Consuelo y Fortaleza en Pruebas:</strong> Jehová es mi pastor (Salmo 23).</li>
+                        <li><strong>Poder de la Alabanza y Oración:</strong> Del pozo de desesperación al cántico nuevo.</li>
+                    </ul>
+                    <p class="italic text-sm mt-3 text-green-600">Enfoque Juvenil/Familiar: Compartir testimonios de consuelo divino. Memorizar Salmos clave. Diario de gratitud familiar.</p>
+                </div>
+
+                <!-- Eclesiastés -->
+                <div class="card ecclesiastes-card">
+                    <h4 class="text-2xl font-semibold text-amber-700 mb-3">Hallando Significado Más Allá de la Vanidad (Eclesiastés)</h4>
+                    <img src="https://placehold.co/600x300/fcd34d/ffffff?text=Reflexión+de+Eclesiastés" alt="Ilustración sobre Eclesiastés" class="rounded-lg mb-4 w-full" onerror="this.src='https://placehold.co/600x300/cccccc/333333?text=Error+Eclesiastés'">
+                    <p class="mb-2">Eclesiastés expone la "vanidad" de una vida sin Dios, anclando nuestros propósitos en la trascendencia divina y el "temor de Dios".</p>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700">
+                        <li><strong>Búsqueda de Satisfacción Duradera:</strong> "Vanidad de vanidades, todo es vanidad".</li>
+                        <li><strong>Contentamiento y Propósito en Dios:</strong> "Teme a Dios, y guarda sus mandamientos".</li>
+                    </ul>
+                    <p class="italic text-sm mt-3 text-amber-600">Enfoque Juvenil/Familiar: ¿Qué ofrece el mundo como felicidad? ¿Es duradera? ¿Cómo "temer a Dios" hoy y disfrutar Sus dones sin idolatrarlos?</p>
+                </div>
+                
+                <!-- Santiago -->
+                <div class="card santiago-card">
+                    <h4 class="text-2xl font-semibold text-pink-700 mb-3">Una Fe que Transforma: Viva y Activa (Santiago)</h4>
+                    <img src="https://placehold.co/600x300/f9a8d4/ffffff?text=Fe+Activa+en+Santiago" alt="Ilustración sobre Santiago" class="rounded-lg mb-4 w-full" onerror="this.src='https://placehold.co/600x300/cccccc/333333?text=Error+Santiago'">
+                    <p class="mb-2">Santiago insiste en que una fe genuina se manifiesta en obras. Es un termómetro de la vida con propósito.</p>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700">
+                        <li><strong>Fe Demostrada por Obras:</strong> "La fe sin obras está muerta".</li>
+                        <li><strong>Sabiduría Celestial en Acción:</strong> Pura, pacífica, amable.</li>
+                        <li><strong>Poder de las Palabras:</strong> La lengua como un fuego.</li>
+                        <li><strong>Perseverancia en Pruebas:</strong> Oportunidades de crecimiento.</li>
+                    </ul>
+                    <p class="italic text-sm mt-3 text-pink-600">Enfoque Juvenil/Familiar: ¿Cómo poner la fe en acción esta semana? Usar palabras que edifican. Apoyarse en dificultades.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Devocional -->
+        <section id="devocional" class="pt-24 -mt-20">
+            <h2 class="section-title text-purple-600">Parte 3: Cultivando un Devocional Familiar Vibrante y Significativo</h2>
+            <p class="text-lg mb-8 text-gray-600">Un laboratorio dinámico donde los propósitos de Dios se aprenden y viven.</p>
+
+            <div class="card">
+                <h3 class="sub-section-title text-purple-500">Creando un Espacio Sagrado para Crecer Juntos</h3>
+                 <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <img src="https://placehold.co/600x400/a78bfa/ffffff?text=Devocional+en+Familia" alt="Familia en momento devocional" class="rounded-lg mb-4 w-full object-cover" onerror="this.src='https://placehold.co/600x400/cccccc/333333?text=Error+Devocional'">
+                    </div>
+                    <ul class="list-none space-y-3 text-gray-700">
+                        <li class="flex items-start"><span class="text-purple-500 font-bold mr-2">&#10004;</span> <strong>Consistencia sobre Duración:</strong> 15-20 min regulares.</li>
+                        <li class="flex items-start"><span class="text-purple-500 font-bold mr-2">&#10004;</span> <strong>Participación Activa:</strong> Involucrar a todos, especialmente jóvenes.</li>
+                        <li class="flex items-start"><span class="text-purple-500 font-bold mr-2">&#10004;</span> <strong>Variedad de Métodos:</strong> Videos, música, testimonios, arte.</li>
+                        <li class="flex items-start"><span class="text-purple-500 font-bold mr-2">&#10004;</span> <strong>Relevancia para sus Vidas:</strong> Conectar con desafíos y aspiraciones juveniles.</li>
+                        <li class="flex items-start"><span class="text-purple-500 font-bold mr-2">&#10004;</span> <strong>Ambiente de Gracia y Apertura:</strong> Espacio seguro para dudas y luchas.</li>
+                        <li class="flex items-start"><span class="text-purple-500 font-bold mr-2">&#10004;</span> <strong>Enfoque en la Transformación:</strong> No solo información, sino cambio de corazón.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card mt-8">
+                <h3 class="sub-section-title text-purple-500">Ideas Temáticas para el Devocional Semanal</h3>
+                <p class="mb-4 text-gray-600">Ejemplos integrando propósitos de Warren, libros bíblicos y sabiduría tradicional con un lenguaje atractivo para jóvenes.</p>
+                <div class="space-y-6">
+                    <details class="bg-purple-50 p-4 rounded-lg shadow hover:shadow-md transition-shadow">
+                        <summary class="font-semibold text-xl text-purple-700 cursor-pointer">Tema 1: "Sobreviviendo (y Prosperando) en la Jungla de la Presión Social"</summary>
+                        <div class="mt-3 text-gray-700 space-y-2">
+                            <p><strong>Propósito Conectado:</strong> Ser como Cristo (integridad y valores cristianos).</p>
+                            <p><strong>Libro(s) Bíblico(s):</strong> Proverbios (malas compañías), Salmos (Dios como refugio).</p>
+                            <p><strong>Versículo Clave:</strong> Proverbios 1:10, Salmo 1:1-2, 1 Corintios 15:33.</p>
+                            <p><strong>Reflexión:</strong> Nuestras relaciones nos moldean. Proverbios advierte sobre malas compañías. Salmo 1 anima a deleitarnos en la Palabra de Dios. ¿Cómo mantenernos firmes en nuestros valores?</p>
+                            <p class="italic text-sm">Desafío: Identificar una presión social, buscar principios bíblicos y planear una respuesta. Orar por fortaleza.</p>
+                        </div>
+                    </details>
+                    <details class="bg-purple-50 p-4 rounded-lg shadow hover:shadow-md transition-shadow">
+                        <summary class="font-semibold text-xl text-purple-700 cursor-pointer">Tema 2: "Encontrando Paz en un Mundo Ruidoso: Desconectarse para Reconectar"</summary>
+                        <div class="mt-3 text-gray-700 space-y-2">
+                            <p><strong>Propósito Conectado:</strong> Adoración (descanso y paz en Dios).</p>
+                            <p><strong>Libro(s) Bíblico(s):</strong> Salmos (paz de Dios), Eclesiastés (vanidad del ruido mundano).</p>
+                            <p><strong>Versículo Clave:</strong> Salmo 46:10, Filipenses 4:6-7, Eclesiastés 2:11.</p>
+                            <p><strong>Reflexión:</strong> Vivimos bombardeados por información. La adoración nos centra en Dios. "Estad quietos, y conoced que yo soy Dios". ¿Cómo cultivar momentos de quietud?</p>
+                            <p class="italic text-sm">Desafío: Dedicar 10-15 min diarios a silencio y oración. Compartir la experiencia.</p>
+                        </div>
+                    </details>
+                     <details class="bg-purple-50 p-4 rounded-lg shadow hover:shadow-md transition-shadow">
+                        <summary class="font-semibold text-xl text-purple-700 cursor-pointer">Tema 3: "¿Para Qué Sirvo? Descubriendo Mi Lugar Único"</summary>
+                        <div class="mt-3 text-gray-700 space-y-2">
+                            <p><strong>Propósito Conectado:</strong> Ministerio (moldeados para servir).</p>
+                            <p><strong>Libro(s) Bíblico(s):</strong> Proverbios (diligencia, talentos), Santiago (fe en acción).</p>
+                            <p><strong>Versículo Clave:</strong> 1 Pedro 4:10, Proverbios 16:3, Santiago 2:18, Efesios 2:10.</p>
+                            <p><strong>Reflexión:</strong> Cada persona tiene un "MOLDE" único para un ministerio. Usar talentos para Su gloria y bien de otros. Fe en acciones concretas.</p>
+                            <p class="italic text-sm">Desafío: Identificar un don/pasión y usarlo para servir a alguien esta semana. Compartir la experiencia.</p>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Conclusión -->
+        <section id="conclusion" class="pt-24 -mt-20">
+            <div class="card bg-gradient-to-r from-sky-100 to-indigo-100">
+                 <h2 class="section-title text-indigo-600">Conclusión: Forjando un Legado Familiar de Fe con Propósito</h2>
+                <div class="grid md:grid-cols-3 gap-6 items-center">
+                    <div class="md:col-span-2">
+                        <p class="mb-4 text-lg">Vivir con propósito según los designios de Dios es un llamado fundamental. En un "mundo convulsionado", esta intencionalidad es más crucial que nunca. La familia es el primer y más influyente espacio donde se aprenden, modelan y viven los propósitos de Dios.</p>
+                        <p class="mb-4">El legado más duradero es una fe viva, auténtica y con propósito. Se forja con una vida coherente que testifica y confirma el mensaje que comunicamos, equipando a los hijos para ser luz y sal.</p>
+                        <p class="mb-4">Establecer un tiempo devocional familiar regular trasciende la mera práctica; es afirmar que Dios es el centro, Su Palabra la guía, y Sus propósitos el ancla. Así, los jóvenes pueden ser lanzados al mundo como agentes de transformación, con identidad clara en Cristo y dirección firme.</p>
+                    </div>
+                    <div>
+                        <img src="https://placehold.co/400x500/818cf8/ffffff?text=Legado+de+Fe" alt="Imagen simbolizando legado de fe" class="rounded-xl shadow-lg w-full h-auto object-cover" onerror="this.src='https://placehold.co/400x500/cccccc/333333?text=Error+Legado'">
+                    </div>
+                </div>
+                <p class="mt-6 text-center text-indigo-700 font-semibold text-xl">
+                    "Porque somos hechura de Dios, creados en Cristo Jesús para buenas obras, las cuales Dios preparó de antemano para que anduviéramos en ellas." - Efesios 2:10 (NVI)
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+            <p>&copy; <span id="currentYear"></span> Devocional Familiar: Propósito y Sabiduría. Todos los derechos reservados.</p>
+            <p class="text-sm text-gray-400 mt-1">Adaptado del documento "Una Vida con Propósito en Familia".</p>
+        </div>
+    </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const sidebar = document.getElementById('sidebar');
-            const hamburgerButton = document.getElementById('hamburgerButton');
-            const sidebarLinks = document.querySelectorAll('.sidebar-link');
-            const pageSections = document.querySelectorAll('.page-section');
-            const interactiveCardsToSections = document.querySelectorAll('#inicio-content .interactive-card[data-target-section]');
-
-            const detailData = {
-                // Propósitos
-                'proposito-adoracion': {
-                    title: '💖 Propósito 1: Adoración',
-                    content: `
-                        <p>El primer y más fundamental propósito de nuestra existencia es vivir para el placer de Dios. La adoración trasciende los actos litúrgicos; es un estilo de vida integral que busca deleitar el corazón del Creador. Esto se manifiesta al amarlo supremamente, confiar en Él completamente, obedecerle de todo corazón, alabarlo y darle gracias continuamente, y usar nuestras habilidades para Su gloria. La entrega total es la esencia de la verdadera adoración.</p>
-                        <p>Los Salmos nos ofrecen innumerables expresiones de esta adoración vivencial. La creación misma nos convoca: "¡Que todo lo que respira alabe al Señor!".</p>
-                        <blockquote><strong>Enfoque Familiar y Juvenil:</strong> ¿Cómo pueden los talentos únicos de cada miembro (artísticos, deportivos, académicos) convertirse en una ofrenda de adoración? Dialogar sobre la obediencia no como carga, sino como acto de amor y adoración.</blockquote>
-                    `
-                },
-                'proposito-comunion': {
-                    title: '👨‍👩‍👧‍👦 Propósito 2: Comunión',
-                    content: `
-                        <p>Dios es relacional y Su deseo es tener una familia. Al creer en Cristo, somos adoptados como hijos de Dios, y la Iglesia es nuestra familia espiritual. La vida está destinada a ser compartida. La verdadera comunión se manifiesta al experimentar la vida juntos: amor desinteresado, sinceridad, servicio práctico, consuelo mutuo y misericordia.</p>
-                        <p>La epístola de Santiago y los Salmos reflejan la importancia de la comunión. Las Escrituras nos instan a ser humildes, amables, pacientes y tolerantes, manteniendo la unidad y perdonándonos.</p>
-                        <blockquote><strong>Enfoque Familiar y Juvenil:</strong> ¿Cómo podemos ser una "familia de Dios" más unida en casa? ¿Cómo apoyamos nuestra iglesia local? Practicar los mandatos de "unos a otros": animarse, perdonarse, servirse con amor.</blockquote>
-                    `
-                },
-                'proposito-discipulado': {
-                    title: '🌱 Propósito 3: Discipulado',
-                    content: `
-                        <p>El plan de Dios es conformarnos a la imagen de Su Hijo, Jesucristo. Este es nuestro destino. Dios está más interesado en nuestro carácter que en nuestra comodidad. El discipulado es un proceso continuo de transformación para reflejar las cualidades de Jesús, especialmente el fruto del Espíritu.</p>
-                        <p>Proverbios enseña que la verdadera sabiduría es el Señor Jesucristo. Santiago nos recuerda que las pruebas son herramientas divinas para formar el carácter. Debemos fijar la mirada en Jesús.</p>
-                        <blockquote><strong>Enfoque Familiar y Juvenil:</strong> ¿Qué significa "ser como Cristo" en la escuela, con amigos, en casa? Identificar un área del carácter de Cristo para trabajarla juntos. Ver las dificultades como oportunidades para crecer.</blockquote>
-                    `
-                },
-                'proposito-ministerio': {
-                    title: '🛠️ Propósito 4: Ministerio',
-                    content: `
-                        <p>Estamos aquí para hacer una contribución significativa. Servimos a Dios al servir a otros. El servicio es el corazón de la vida de fe. Dios nos ha moldeado de manera única (dones, pasiones, habilidades, personalidad, experiencias - MOLDE/FORMA) para un ministerio particular.</p>
-                        <p>Proverbios habla de la mayordomía fiel de nuestros dones. Santiago recuerda que el servicio eficaz requiere un carácter moldeado por la Palabra.</p>
-                        <blockquote><strong>Enfoque Familiar y Juvenil:</strong> Ayudar a cada miembro a identificar sus dones y pasiones. ¿Qué te entusiasma? ¿En qué eres bueno? ¿Qué necesidades te conmueven? Encontrar maneras de usar esos dones para servir en la familia, iglesia o comunidad. Planificar un proyecto de servicio familiar.</blockquote>
-                    `
-                },
-                'proposito-mision': {
-                    title: '🌍 Propósito 5: Misión',
-                    content: `
-                        <p>El quinto propósito es unirnos a Dios en Su obra redentora. Esta misión es compartida (llevar el evangelio) y específica para cada uno. "Tu testimonio personal es más eficaz que un sermón", dice Warren.</p>
-                        <p>Los Salmos reflejan este anhelo misionero. La Gran Comisión es el mandato de Jesús. Contamos con el poder del Espíritu Santo.</p>
-                        <blockquote><strong>Enfoque Familiar y Juvenil:</strong> ¿Cómo compartir nuestra fe de manera natural y auténtica? Discutir la importancia del testimonio personal. Apoyar a misioneros o participar en proyectos de alcance local.</blockquote>
-                        <div class="mt-8 pt-6 border-t border-slate-200">
-                           <h3 class="text-xl font-semibold text-teal-500 mb-4">Viviendo con la Eternidad en Mente</h3>
-                           <p>Una enseñanza transformadora es que nuestra existencia terrenal es una preparación para la eternidad. Esto debería alterar radicalmente nuestros valores y prioridades. "Una vez que comprendes que la vida es más que vivir el aquí y ahora... entonces comienzas a vivir de manera diferente", afirma Warren.</p>
-                           <p>Eclesiastés concluye: "Teme a Dios, y guarda sus mandamientos; porque esto es el todo del hombre". Esta perspectiva eterna ayuda a relativizar los problemas terrenales y encontrar estabilidad.</p>
-                           <blockquote><strong>Enfoque Familiar y Juvenil:</strong> Dialogar sobre cómo las decisiones de hoy impactan la eternidad. Discutir la diferencia entre tesoros terrenales y celestiales. ¿Cómo vivir más enfocados en lo eterno?</blockquote>
-                        </div>
-                    `
-                },
-                // Sabiduría
-                'sabiduria-proverbios': {
-                    title: '📖 El Tesoro de la Sabiduría Práctica (Proverbios)',
-                    content: `
-                        <p>Proverbios es un manual de sabiduría divina para la vida cotidiana, decisiones, relaciones y carácter.</p>
-                        <ul>
-                            <li><strong>El Temor de Jehová como Fundamento:</strong> Reverencia, respeto y obediencia amorosa. <blockquote><strong>Enfoque Juvenil/Familiar:</strong> ¿Qué significa "temer a Jehová" hoy?</blockquote></li>
-                            <li><strong>Consejos para la Toma de Decisiones:</strong> Confianza en Dios, no en la propia prudencia. (Proverbios 3:5-6). <blockquote><strong>Enfoque Juvenil/Familiar:</strong> Ante decisiones, ¿cómo aplicar Prov. 3:5-6? Orar juntos.</blockquote></li>
-                            <li><strong>Relaciones Familiares:</strong> Respeto a los padres, guardar el corazón. <blockquote><strong>Enfoque Juvenil/Familiar:</strong> Diálogo sobre roles. Honrar a los padres. Peligros de malas compañías.</blockquote></li>
-                            <li><strong>Integridad Personal:</strong> "El que camina en integridad anda confiado." <blockquote><strong>Enfoque Juvenil/Familiar:</strong> Importancia de la honestidad. Ser persona de palabra.</blockquote></li>
-                        </ul>
-                    `
-                },
-                'sabiduria-salmos': {
-                    title: '🎶 Un Corazón Anclado en Dios (Salmos)',
-                    content: `
-                        <p>Salmos ofrece un modelo para expresar emociones (gozo, angustia, duda, gratitud) dirigiéndolas a Dios.</p>
-                        <ul>
-                            <li><strong>Consuelo y Fortaleza en Pruebas:</strong> "Jehová es mi pastor; nada me faltará." (Salmo 23). "Dios es nuestro amparo y nuestra fortaleza." (Salmo 46:1). <blockquote><strong>Enfoque Juvenil/Familiar:</strong> Compartir testimonios. Memorizar versículos clave.</blockquote></li>
-                            <li><strong>Poder de la Alabanza y Oración:</strong> La oración es camino de desesperación a alabanza. (Salmo 40:1-3). Gratitud constante. <blockquote><strong>Enfoque Juvenil/Familiar:</strong> "Diario de gratitud" familiar. Expresar emociones a Dios.</blockquote></li>
-                        </ul>
-                    `
-                },
-                'sabiduria-eclesiastes': {
-                    title: '🤔 Hallando Significado Más Allá de la Vanidad (Eclesiastés)',
-                    content: `
-                        <p>Eclesiastés, con su análisis de la vida "debajo del sol", ancla nuestros propósitos en la trascendencia divina.</p>
-                        <ul>
-                            <li><strong>Satisfacción Duradera:</strong> "Vanidad de vanidades... todo es vanidad." Ningún bien creado satisface el alma; la felicidad se halla en Dios. <blockquote><strong>Enfoque Juvenil/Familiar:</strong> Dialogar sobre fuentes de felicidad mundanas. ¿Son duraderas?</blockquote></li>
-                            <li><strong>Contentamiento y Propósito Trascendente:</strong> "Teme a Dios, y guarda sus mandamientos; porque esto es el todo del hombre." <blockquote><strong>Enfoque Juvenil/Familiar:</strong> ¿Qué significa "temer a Dios"? ¿Cómo ayuda a encontrar propósito?</blockquote></li>
-                        </ul>
-                    `
-                },
-                'sabiduria-santiago': {
-                    title: '🏃‍♂️ Una Fe que Transforma: Viva y Activa (Santiago)',
-                    content: `
-                        <p>Santiago es un "termómetro" de la vida con propósito: una fe genuina se manifiesta en obras concretas.</p>
-                        <ul>
-                            <li><strong>Fe Demostrada por Obras:</strong> "La fe, si no tiene obras, es muerta en sí misma." <blockquote><strong>Enfoque Juvenil/Familiar:</strong> ¿Cómo poner la fe en acción tangible? Servir.</blockquote></li>
-                            <li><strong>Sabiduría Celestial, Palabras, Pruebas:</strong>
-                                <ul>
-                                    <li>Sabiduría de lo alto: pura, pacífica, amable.</li>
-                                    <li>Poder de las palabras: "La lengua es un fuego".</li>
-                                    <li>Perseverancia en pruebas: produce paciencia.</li>
-                                </ul>
-                                <blockquote><strong>Enfoque Juvenil/Familiar:</strong> Palabras que edifican. Apoyarse en pruebas. Buscar sabiduría "de lo alto".</blockquote>
-                            </li>
-                        </ul>
-                    `
-                }
-            };
-            
-            const temasDevocionales = [
-                {
-                    title: "Tema 1: Sobreviviendo (y Prosperando) en la Jungla de la Presión Social",
-                    content: `
-                        <p><strong>Propósito Conectado:</strong> Ser como Cristo (integridad).</p>
-                        <p><strong>Libro(s) Bíblico(s):</strong> Proverbios, Salmos.</p>
-                        <p><strong>Versículo(s) Clave:</strong> Prov. 1:10, 1:15; Salmo 1:1-2; 1 Cor. 15:33.</p>
-                        <p><strong>Reflexión:</strong> Nuestras relaciones nos moldean. Proverbios advierte sobre malas compañías. Es vital saber quiénes somos en Cristo. ¿Cómo mantenernos firmes?</p>
-                        <p><strong>Preguntas para Diálogo:</strong> ¿Presiones sociales? ¿Difícil decir "no"? ¿Cómo ayuda la fe? ¿Influencias positivas?</p>
-                        <p><strong>Actividad:</strong> Identificar presión, buscar principios bíblicos, planear respuesta. Orar.</p>`
-                },
-                {
-                    title: "Tema 2: Encontrando Paz en un Mundo Ruidoso: Desconectarse para Reconectar",
-                    content: `
-                        <p><strong>Propósito Conectado:</strong> Adoración (descanso, paz en Dios).</p>
-                        <p><strong>Libro(s) Bíblico(s):</strong> Salmos, Eclesiastés.</p>
-                        <p><strong>Versículo(s) Clave:</strong> Salmo 46:10; Fil. 4:6-7; Ecl. 2:11.</p>
-                        <p><strong>Reflexión:</strong> Bombardeo de información. Adoración nos centra en Dios, fuente de paz. Necesidad de quietud. ¿Cómo cultivar momentos para "estar quietos"?</p>
-                        <p><strong>Preguntas para Diálogo:</strong> ¿"Ruidos" que impiden escuchar a Dios? ¿Momentos/lugares de paz? ¿Cómo crear espacios de quietud?</p>
-                        <p><strong>Actividad:</strong> 10-15 min diarios de silencio y oración. Compartir experiencia.</p>`
-                },
-                {
-                    title: "Tema 3: ¿Para Qué Sirvo? Descubriendo Mi Lugar Único",
-                    content: `
-                        <p><strong>Propósito Conectado:</strong> Ministerio (moldeados para servir).</p>
-                        <p><strong>Libro(s) Bíblico(s):</strong> Proverbios, Santiago.</p>
-                        <p><strong>Versículo(s) Clave:</strong> 1 Pedro 4:10; Prov. 16:3; Stg. 2:18; Ef. 2:10.</p>
-                        <p><strong>Reflexión:</strong> Cada persona tiene un "MOLDE" único para un ministerio. Proverbios resalta diligencia. Santiago desafía a que la fe se traduzca en acciones. ¿Cómo nos equipó Dios?</p>
-                        <p><strong>Preguntas para Diálogo:</strong> ¿Pasiones? ¿Habilidades? ¿Necesidades alrededor? ¿Cómo Dios podría usar esto?</p>
-                        <p><strong>Actividad:</strong> Identificar don/habilidad/pasión y forma de usarlo para servir. Compartir.</p>`
-                }
-            ];
-
-            function showPageSection(sectionId) {
-                pageSections.forEach(section => {
-                    section.classList.toggle('hidden', section.id !== sectionId + '-content');
-                });
-                sidebarLinks.forEach(link => {
-                    link.classList.toggle('active', link.dataset.section === sectionId);
-                });
-                 if (window.innerWidth < 768) { // md breakpoint
-                    sidebar.classList.remove('open');
-                }
-                document.querySelector('.main-content').scrollTop = 0; // Scroll to top of content area
-            }
-
-            hamburgerButton.addEventListener('click', () => {
-                sidebar.classList.toggle('open');
-            });
-
-            sidebarLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const sectionId = link.dataset.section;
-                    showPageSection(sectionId);
-                    // Ocultar vistas de detalle si se cambia de sección principal
-                    document.getElementById('propositos-card-container').classList.remove('hidden');
-                    document.getElementById('propositos-intro').classList.remove('hidden');
-                    document.getElementById('propositos-detail-view').classList.add('hidden');
-                    document.getElementById('sabiduria-card-container').classList.remove('hidden');
-                    document.getElementById('sabiduria-intro').classList.remove('hidden');
-                    document.getElementById('sabiduria-detail-view').classList.add('hidden');
-                });
-            });
-            
-            interactiveCardsToSections.forEach(card => {
-                card.addEventListener('click', () => {
-                    const targetSectionId = card.dataset.targetSection;
-                    showPageSection(targetSectionId);
-                });
-            });
-
-            function setupDetailView(cardContainerId, detailViewId, detailContentId, introId, backButtonId, sectionIdPrefix) {
-                const cardContainer = document.getElementById(cardContainerId);
-                const detailView = document.getElementById(detailViewId);
-                const detailContentEl = document.getElementById(detailContentId);
-                const introEl = document.getElementById(introId);
-                const backButton = document.getElementById(backButtonId);
-
-                if (!cardContainer || !detailView || !detailContentEl || !introEl || !backButton) return;
-
-                cardContainer.querySelectorAll('.interactive-card').forEach(card => {
-                    card.addEventListener('click', () => {
-                        const detailKey = card.dataset.detail;
-                        if (detailData[detailKey]) {
-                            detailContentEl.innerHTML = `
-                                <h2 class="detail-view-title">${detailData[detailKey].title}</h2>
-                                <div class="detail-view-content">${detailData[detailKey].content}</div>`;
-                            cardContainer.classList.add('hidden');
-                            introEl.classList.add('hidden');
-                            detailView.classList.remove('hidden');
-                             detailView.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }
-                    });
-                });
-
-                backButton.addEventListener('click', () => {
-                    detailView.classList.add('hidden');
-                    cardContainer.classList.remove('hidden');
-                    introEl.classList.remove('hidden');
-                     cardContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                });
-            }
-
-            setupDetailView('propositos-card-container', 'propositos-detail-view', 'proposito-detail-content', 'propositos-intro', 'back-to-propositos', 'proposito');
-            setupDetailView('sabiduria-card-container', 'sabiduria-detail-view', 'sabiduria-detail-content', 'sabiduria-intro', 'back-to-sabiduria', 'sabiduria');
-
-            // Cargar temas devocionales en acordeón
-            const accordionContainer = document.getElementById('temas-accordion-container');
-            if (accordionContainer) {
-                temasDevocionales.forEach((tema, index) => {
-                    const itemDiv = document.createElement('div');
-                    itemDiv.classList.add('accordion-item');
-                    itemDiv.innerHTML = `
-                        <button class="theme-accordion-button">
-                            <span>${tema.title}</span>
-                            <span class="theme-accordion-icon">▼</span>
-                        </button>
-                        <div class="theme-accordion-content hidden">
-                            ${tema.content}
-                        </div>
-                    `;
-                    accordionContainer.appendChild(itemDiv);
-
-                    const button = itemDiv.querySelector('.theme-accordion-button');
-                    const content = itemDiv.querySelector('.theme-accordion-content');
-                    const icon = itemDiv.querySelector('.theme-accordion-icon');
-
-                    button.addEventListener('click', () => {
-                        const isVisible = !content.classList.contains('hidden');
-                        content.classList.toggle('hidden');
-                        icon.classList.toggle('rotate-180', !isVisible);
-                    });
-                });
-            }
-            
-            document.getElementById('currentYear').textContent = new Date().getFullYear();
-            
-            // Show initial section (Inicio)
-            showPageSection('inicio');
-
-             // Close sidebar if clicking outside on mobile
-            document.querySelector('.main-content').addEventListener('click', () => {
-                if (window.innerWidth < 768 && sidebar.classList.contains('open')) {
-                    sidebar.classList.remove('open');
-                }
-            });
-
+        // Script para el menú móvil
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
         });
+
+        // Cerrar menú móvil al hacer clic en un enlace
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+        
+        // Año actual en el footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Opcional: Acordeones (details/summary ya funciona, pero para JS sería así)
+        // const accordionButtons = document.querySelectorAll('.accordion-button');
+        // accordionButtons.forEach(button => {
+        //     button.addEventListener('click', () => {
+        //         button.classList.toggle('active');
+        //         // El contenido se expande/contrae con CSS basado en la clase 'active'
+        //     });
+        // });
     </script>
+
 </body>
 </html>
